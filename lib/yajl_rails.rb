@@ -6,13 +6,15 @@ end
   
 module YajlRails
   extend self
+  
+  class ParseError < Yajl::ParseError; end
 
   # Converts a JSON string into a Ruby object.
   def decode(json)
     if !json.respond_to?(:read)
       json = StringIO.new(json)
     end
-    data = ::Yajl::Stream.parse(json)
+    data = ::Yajl::Parser.parse(json)
     if ActiveSupport.parse_json_times
       convert_dates_from(data)
     else
